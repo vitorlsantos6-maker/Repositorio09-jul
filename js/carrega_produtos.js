@@ -1,10 +1,13 @@
 // IMPORTANDO O ARRAY DOS PRODUTOS
 import { produtos } from "./produtos.js";
 
-// PEGANDO ELEMENTO DO DOM
+// PEGANDO ELEMENTOS DO DOM
 const section_cards = document.querySelector('#cards');
+const inputPesquisa = document.querySelector('#pesquisa input'); // Seleciona o input dentro da seção de pesquisa
 
-// 1. PRIMEIRO DECLARAMOS TODAS AS FUNÇÕES...
+// ==========================================
+// 1. DECLARAÇÃO DAS FUNÇÕES
+// ==========================================
 
 // FILTRANDO AS SEÇÕES COM A COLEÇÃO map
 const listarSecoes = () => {
@@ -18,14 +21,26 @@ const listarSecoes = () => {
     return secoesMenu;
 };
 
-// FILTRANDO PRODUTOS 
+// FILTRANDO PRODUTOS POR SEÇÃO
 const produtosFiltrados = (idSecao) => {
     return produtos.filter(elem => elem.id_secao === idSecao);
 };
 
-// MONTANDO CARDS
+// MONTANDO CARDS NA TELA
 const montandoCards = (objProdutos) => {
     section_cards.innerHTML = '';
+
+    // Se nenhum produto for encontrado na busca, exibe uma mensagem amigável
+    if (objProdutos.length === 0) {
+        const mensagem = document.createElement('p');
+        mensagem.style.fontSize = '1.5em';
+        mensagem.style.gridColumn = '1 / -1'; // Faz a mensagem ocupar toda a largura do grid
+        mensagem.style.textAlign = 'center';
+        mensagem.style.margin = '50px 0';
+        mensagem.innerHTML = 'Nenhum produto encontrado 😞';
+        section_cards.appendChild(mensagem);
+        return;
+    }
 
     objProdutos.forEach((elem, i) => {
         const divCard = document.createElement('div');
@@ -56,13 +71,13 @@ const montandoCards = (objProdutos) => {
     });
 };
 
-// FUNÇÃO PARA CARREGAR OS PRODUTOS
+// FUNÇÃO PARA CARREGAR TODOS OS PRODUTOS INICIALMENTE
 const listarProdutos = () => {
     section_cards.innerHTML = '';
-    montandoCards(produtos); // Agora o JS já sabe quem é montandoCards!
+    montandoCards(produtos);
 };
 
-// MONTANDO OS LINKS SEÇÕES
+// MONTANDO OS LINKS DAS SEÇÕES NO MENU
 const montarSecoes = () => {
     const ulMenu = document.querySelector('#menu-secoes');
     ulMenu.innerHTML = '';
@@ -75,6 +90,8 @@ const montarSecoes = () => {
     aTodos.innerHTML = 'Todos';
 
     aTodos.addEventListener('click', () => {
+        // Quando clicar em "Todos", limpamos o campo de pesquisa e mostramos tudo
+        if (inputPesquisa) inputPesquisa.value = '';
         montandoCards(produtos);
     });
 
@@ -91,6 +108,8 @@ const montarSecoes = () => {
         aSecao.innerHTML = elem.nome_secao;
 
         aSecao.addEventListener('click', () => {
+            // Quando clicar em uma categoria específica, limpamos a barra de pesquisa
+            if (inputPesquisa) inputPesquisa.value = '';
             montandoCards(produtosFiltrados(elem.id_secao));
         });
 
@@ -99,9 +118,29 @@ const montarSecoes = () => {
     });
 };
 
+// CONFIGURANDO A BARRA DE PESQUISA
+const configurarPesquisa = () => {
+    if (!inputPesquisa) return;
 
-// 2. POR FIM, EXECUTAMOS AS FUNÇÕES QUE INICIAM A PÁGINA
-// (Agora que tudo já foi devidamente inicializado acima)
+    inputPesquisa.addEventListener('input', (evento) => {
+        // Pega o que o usuário digitou e transforma em minúsculo
+        const termoBusca = evento.target.value.toLowerCase().trim();
+
+        // Filtra a lista de produtos baseada no termo digitado
+        const produtosEncontrados = produtos.filter(produto => {
+            return produto.descricao_produto.toLowerCase().includes(termoBusca);
+        });
+
+        // Atualiza a tela exibindo apenas os produtos encontrados
+        montandoCards(produtosEncontrados);
+    });
+};
+
+
+// ==========================================
+// 2. EXECUÇÃO DAS FUNÇÕES
+// ==========================================
 
 listarProdutos();
 montarSecoes();
+configurarPesquisa(); // Ativa o monitoramento do campo de busca
