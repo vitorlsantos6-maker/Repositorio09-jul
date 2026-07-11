@@ -26,15 +26,14 @@ const produtosFiltrados = (idSecao) => {
     return produtos.filter(elem => elem.id_secao === idSecao);
 };
 
-// MONTANDO CARDS NA TELA
+// MONTANDO CARDS NA TELA (ATUALIZADO COM EVENTO DE ADICIONAR AO CARRINHO)
 const montandoCards = (objProdutos) => {
     section_cards.innerHTML = '';
 
-    // Se nenhum produto for encontrado na busca, exibe uma mensagem amigável
     if (objProdutos.length === 0) {
         const mensagem = document.createElement('p');
         mensagem.style.fontSize = '1.5em';
-        mensagem.style.gridColumn = '1 / -1'; // Faz a mensagem ocupar toda a largura do grid
+        mensagem.style.gridColumn = '1 / -1';
         mensagem.style.textAlign = 'center';
         mensagem.style.margin = '50px 0';
         mensagem.innerHTML = 'Nenhum produto encontrado 😞';
@@ -42,7 +41,7 @@ const montandoCards = (objProdutos) => {
         return;
     }
 
-    objProdutos.forEach((elem, i) => {
+    objProdutos.forEach((elem) => {
         const divCard = document.createElement('div');
         divCard.setAttribute('class', 'card');
 
@@ -61,6 +60,37 @@ const montandoCards = (objProdutos) => {
         const btnCard = document.createElement('button');
         btnCard.setAttribute('class', 'btn_card');
         btnCard.innerHTML = 'Adicionar';
+
+        // ==========================================
+        // EVENTO PARA ADICIONAR NO CARRINHO
+        // ==========================================
+        btnCard.addEventListener('click', () => {
+            // Recupera o carrinho atual do localStorage ou cria um array vazio se não existir
+            let carrinho = JSON.parse(localStorage.getItem('carrinhoDeCompras')) || [];
+
+            // Verifica se o produto já está no carrinho
+            const produtoExistente = carrinho.find(item => item.id_produto === elem.id_produto);
+
+            if (produtoExistente) {
+                // Se já existir, apenas aumenta a quantidade
+                produtoExistente.quantidade += 1;
+            } else {
+                // Se for novo, adiciona o objeto com quantidade inicial 1
+                carrinho.push({
+                    id_produto: elem.id_produto,
+                    descricao_produto: elem.descricao_produto,
+                    caminho_da_imagem: elem.caminho_da_imagem,
+                    valor_unitario: elem.valor_unitario,
+                    quantidade: 1
+                });
+            }
+
+            // Salva de volta no localStorage
+            localStorage.setItem('carrinhoDeCompras', JSON.stringify(carrinho));
+            
+            // Feedback visual simples para o usuário
+            alert(`${elem.descricao_produto} foi adicionado ao carrinho!`);
+        });
 
         divCard.appendChild(imgProduto);
         divCard.appendChild(h2Titulo);
