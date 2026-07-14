@@ -1,24 +1,23 @@
 //CRIANDO O ARRAY DE ITENS DO CARRINHO
-const itensCarrinho = JSON.parse(localStorage('itenSessão')) || []
+const itensCarrinho = JSON.parse(localStorage.getItem('itensSessao')) || []
 
-//FUNÇÃO PARA O ITEM NO ARRAY
+//const itensCarrinho = JSON.parse(sessionStorage.getItem('itensSessao')) || []
+
+//FUNÇÃO PARA ADICIONAR O ITEM NO ARRAY
 const addItem = (objItem) => {
     itensCarrinho.push(objItem)
 
-    localStorage.setItem('itenSessao' , itensCarrinho)
+    localStorage.setItem('itensSessao', JSON.stringify(itensCarrinho))
+    //sessionStorage.setItem('itensSessao', JSON.stringify(itensCarrinho))
 }
 
 //LISTAR ITENS DO CARRINHO
 const listItens = () => {
-    const itensSelecionados = JSON.stringify(localStorage.getItem('itenSessao'))
+    const itensSelecionados = JSON.parse(localStorage.getItem('itensSessao')) || []
+
+    //const itensSelecionados = JSON.parse(sessionStorage.getItem('itensSessao')) || []
 
     return itensSelecionados
 }
 
-//MONTANDO A TELA CARRINHO
-const montaTelaCarrinho = () => {
-    //PEGNDO ELEMENTOS DO DOM
-    const sectionItensCarrinho = document.querySelector('#itens-carrinho')
-
-
-}
+export { addItem, listItens }

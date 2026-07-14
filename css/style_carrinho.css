@@ -1,0 +1,25 @@
+@import url(style_estrutura_paginas.css);
+
+#carrinho{
+    width: 1000px;
+    min-height: 750px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+#itens-carrinho {
+    width: 680px;
+    margin: 20px 10px;
+    min-height: 750px;
+}
+
+.item {
+    width: 600px;
+    height: 100px;
+    margin: 20px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 2px solid var(--cor_suave);
+}
