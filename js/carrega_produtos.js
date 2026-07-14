@@ -1,6 +1,6 @@
 // IMPORTANDO O ARRAY DOS PRODUTOS
 import { produtos } from "./produtos.js";
-
+//IMPORTADO O A ARROW FUNCTION 
 // PEGANDO ELEMENTOS DO DOM
 const section_cards = document.querySelector('#cards');
 const inputPesquisa = document.querySelector('#pesquisa input'); // Seleciona o input dentro da seção de pesquisa
